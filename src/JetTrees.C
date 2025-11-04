@@ -95,7 +95,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 		for(unsigned int ijet = 0; ijet < JetRecoType->GetSize(); ijet++) {
 			// Make 4-vector
 			LorentzVector JetReco((*JetRecoPx)[ijet], (*JetRecoPy)[ijet], (*JetRecoPz)[ijet], (*JetRecoE)[ijet]);
-			RecoJet_pt.push_back(RecoJetPt);
+			RecoJet_pt.push_back(JetReco.Pt());
 			RecoJet_eta.push_back(JetReco.Eta());
 			RecoJet_phi.push_back(JetReco.Phi());
 			RecoJet_E.push_back(JetReco.E());
