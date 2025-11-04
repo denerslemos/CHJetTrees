@@ -20,6 +20,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	std::vector<float> GenJet_E;
 	std::vector<float> GenJet_M;
 	std::vector<bool> GenJet_hasElectron;
+	std::vector<bool> GenJet_hasNeutral;
 	std::vector<float> GenJet_maxPtPart_pt;
 
 	// Read the list of input file(s)
@@ -66,6 +67,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	JetTree->Branch("GenJet_E", &GenJet_E);
 	JetTree->Branch("GenJet_M", &GenJet_M);
 	JetTree->Branch("GenJet_hasElectron", &GenJet_hasElectron);
+	JetTree->Branch("GenJet_hasNeutral", &GenJet_hasNeutral);
     JetTree->Branch("GenJet_maxPtPart_pt", &GenJet_maxPtPart_pt); 
 	// --- END TTree setup ---
 	
@@ -89,6 +91,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 		GenJet_E.clear();
 		GenJet_M.clear();
 		GenJet_hasElectron.clear();
+		GenJet_hasNeutral.clear();
 		GenJet_maxPtPart_pt.clear();
 
 	    // Analyze Reconstructed Jets
@@ -141,20 +144,24 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			// -> Check for electrons
 			// Loop over jet constituents (particles within the jet)
 			bool hasGenElectron = false; 
+			bool hasGenNeutral = false; 
 			float maxPtGen = -1.0;
 			for(unsigned int icgjet = (*JetGenCBegin)[igjet]; icgjet < (*JetGenCEnd)[igjet]; icgjet++) { 
 				int genPartIndex = (*JetGenCIdx)[icgjet];
 				// Calculate constituent pT
-				float px = (*TrkGenPx)[genPartIndex];
-				float py = (*TrkGenPy)[genPartIndex];
+				float px = (*TrkMCGenPx)[genPartIndex];
+				float py = (*TrkMCGenPy)[genPartIndex];
 				float pt = std::sqrt(px*px + py*py);
+				float charge = (*TrkMCGenCharge)[genPartIndex];
 				// Update Max Pt Particle
 				if (pt > maxPtGen) { maxPtGen = pt; }
-				int gTrkPDG = (*TrkGenPDG)[genPartIndex];	    		
-			    if(gTrkPDG == 11) hasGenElectron = true;					
+				int gTrkPDG = (*TrkMCGenPDG)[genPartIndex];	    		
+			    if(gTrkPDG == 11) hasGenElectron = true;
+			    if(charge == 0)	hasGenNeutral = true;		
 			}
 			
 			GenJet_hasElectron.push_back(hasGenElectron);
+			GenJet_hasNeutral.push_back(hasGenNeutral);
 			GenJet_maxPtPart_pt.push_back(maxPtGen);			
 
 		}
