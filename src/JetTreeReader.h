@@ -50,6 +50,7 @@ std::unique_ptr<TTreeReaderArray<double>> TrkMCGenPx;
 std::unique_ptr<TTreeReaderArray<double>> TrkMCGenPy;
 std::unique_ptr<TTreeReaderArray<double>> TrkMCGenPz;
 std::unique_ptr<TTreeReaderArray<double>> TrkMCGenM;
+std::unique_ptr<TTreeReaderArray<float>> TrkMCGenCharge;
 std::unique_ptr<TTreeReaderArray<int>> TrkMCGenPDG;
 std::unique_ptr<TTreeReaderArray<int>> TrkMCGenStatus;
 
