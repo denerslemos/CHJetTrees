@@ -44,29 +44,29 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	// Reading trees
 	std::unique_ptr<TTreeReader> tree_reader;
 	JetTreeReader(mychain, tree_reader); 
-	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); // To keep track of the event number	
 	
 	// Make Output
 	TFile *OutFile = TFile::Open(Form("%s",OutputFile.Data()),"RECREATE");	
 	TTree *JetTree = new TTree("JetTree", "JetTree");	
+	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); // To keep track of the event number	
 	// Event-level branches
-	OutTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); 
+	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); 
 	// Reco Jet Branches
-	OutTree->Branch("RecoJet_pt", &RecoJet_pt);
-	OutTree->Branch("RecoJet_eta", &RecoJet_eta);
-	OutTree->Branch("RecoJet_phi", &RecoJet_phi);
-	OutTree->Branch("RecoJet_E", &RecoJet_E);
-	OutTree->Branch("RecoJet_M", &RecoJet_M);
-	OutTree->Branch("RecoJet_hasElectron", &RecoJet_hasElectron);
-    OutTree->Branch("RecoJet_maxPtPart_pt", &RecoJet_maxPtPart_pt); 
+	JetTree->Branch("RecoJet_pt", &RecoJet_pt);
+	JetTree->Branch("RecoJet_eta", &RecoJet_eta);
+	JetTree->Branch("RecoJet_phi", &RecoJet_phi);
+	JetTree->Branch("RecoJet_E", &RecoJet_E);
+	JetTree->Branch("RecoJet_M", &RecoJet_M);
+	JetTree->Branch("RecoJet_hasElectron", &RecoJet_hasElectron);
+    JetTree->Branch("RecoJet_maxPtPart_pt", &RecoJet_maxPtPart_pt); 
 	// Gen Jet Branches
-	OutTree->Branch("GenJet_pt", &GenJet_pt);
-	OutTree->Branch("GenJet_eta", &GenJet_eta);
-	OutTree->Branch("GenJet_phi", &GenJet_phi);
-	OutTree->Branch("GenJet_E", &GenJet_E);
-	OutTree->Branch("GenJet_M", &GenJet_M);
-	OutTree->Branch("GenJet_hasElectron", &GenJet_hasElectron);
-    OutTree->Branch("GenJet_maxPtPart_pt", &GenJet_maxPtPart_pt); 
+	JetTree->Branch("GenJet_pt", &GenJet_pt);
+	JetTree->Branch("GenJet_eta", &GenJet_eta);
+	JetTree->Branch("GenJet_phi", &GenJet_phi);
+	JetTree->Branch("GenJet_E", &GenJet_E);
+	JetTree->Branch("GenJet_M", &GenJet_M);
+	JetTree->Branch("GenJet_hasElectron", &GenJet_hasElectron);
+    JetTree->Branch("GenJet_maxPtPart_pt", &GenJet_maxPtPart_pt); 
 	// --- END TTree setup ---
 	
 	// Loop over events	
@@ -161,7 +161,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 
 		NEVENTS++;
 
-		OutTree->Fill();
+		JetTree->Fill();
 		
 	}
 	
