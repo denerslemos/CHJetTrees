@@ -149,13 +149,13 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			for(unsigned int icgjet = (*JetGenCBegin)[igjet]; icgjet < (*JetGenCEnd)[igjet]; icgjet++) { 
 				int genPartIndex = (*JetGenCIdx)[icgjet];
 				// Calculate constituent pT
-				float px = (*TrkMCGenPx)[genPartIndex];
-				float py = (*TrkMCGenPy)[genPartIndex];
+				float px = (*TrkGenPx)[genPartIndex];
+				float py = (*TrkGenPy)[genPartIndex];
 				float pt = std::sqrt(px*px + py*py);
-				float charge = (*TrkMCGenCharge)[genPartIndex];
+				float charge = (*TrkGenCharge)[genPartIndex];
 				// Update Max Pt Particle
 				if (pt > maxPtGen) { maxPtGen = pt; }
-				int gTrkPDG = (*TrkMCGenPDG)[genPartIndex];	    		
+				int gTrkPDG = (*TrkGenPDG)[genPartIndex];	    		
 			    if(gTrkPDG == 11) hasGenElectron = true;
 			    if(charge == 0)	hasGenNeutral = true;		
 			}
