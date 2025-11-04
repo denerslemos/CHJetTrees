@@ -43,6 +43,7 @@ std::unique_ptr<TTreeReaderArray<float>> TrkGenPy;
 std::unique_ptr<TTreeReaderArray<float>> TrkGenPz;
 std::unique_ptr<TTreeReaderArray<float>> TrkGenE;
 std::unique_ptr<TTreeReaderArray<float>> TrkGenM;
+std::unique_ptr<TTreeReaderArray<float>> TrkGenCharge;
 std::unique_ptr<TTreeReaderArray<int>> TrkGenPDG;
 
 // MCParticles particles -> full generator information + sec decay from GEANT
@@ -117,6 +118,6 @@ void JetTreeReader(TChain* chain, std::unique_ptr<TTreeReader>& tree_reader) {
 	TrkGenPz = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "GeneratedParticles.momentum.z");
 	TrkGenM = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "GeneratedParticles.mass");
 	TrkGenPDG = std::make_unique<TTreeReaderArray<int>>(*tree_reader, "GeneratedParticles.PDG");
-	TrkGenCharge = std::make_unique<TTreeReaderArray<int>>(*tree_reader, "GeneratedParticles.charge");
+	TrkGenCharge = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "GeneratedParticles.charge");
 
 }
