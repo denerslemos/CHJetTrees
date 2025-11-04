@@ -108,7 +108,7 @@ void JetTreeReader(TChain* chain, std::unique_ptr<TTreeReader>& tree_reader) {
 	TrkMCGenPz = std::make_unique<TTreeReaderArray<double>>(*tree_reader, "MCParticles.momentum.z");
 	TrkMCGenM = std::make_unique<TTreeReaderArray<double>>(*tree_reader, "MCParticles.mass");
 	TrkMCGenPDG = std::make_unique<TTreeReaderArray<int>>(*tree_reader, "MCParticles.PDG");
-	TrkMCGenCharge = std::make_unique<TTreeReaderArray<int>>(*tree_reader, "MCParticles.charge");
+    TrkMCGenCharge = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "MCParticles.charge");
 
 	// Full gen level
 	/*
