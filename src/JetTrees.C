@@ -13,6 +13,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	std::vector<float> RecoJet_M;
 	std::vector<bool> RecoJet_hasElectron;
 	std::vector<float> RecoJet_maxPtPart_pt; 
+	// Reco jet constituents
+	std::vector<std::vector<float>> RecoJet_constituent_pt;
+	std::vector<std::vector<float>> RecoJet_constituent_eta;
+	std::vector<std::vector<float>> RecoJet_constituent_phi;
 	// Gen Jets (Variable-length vectors for multiple jets per event)
 	std::vector<float> GenJet_pt;
 	std::vector<float> GenJet_eta;
@@ -22,6 +26,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	std::vector<bool> GenJet_hasElectron;
 	std::vector<bool> GenJet_hasNeutral;
 	std::vector<float> GenJet_maxPtPart_pt;
+	// Gen jet constituents
+	std::vector<std::vector<float>> GenJet_constituent_pt;
+	std::vector<std::vector<float>> GenJet_constituent_eta;
+	std::vector<std::vector<float>> GenJet_constituent_phi;
 
 	// Read the list of input file(s)
 	fstream FileList;
@@ -60,6 +68,11 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	JetTree->Branch("RecoJet_M", &RecoJet_M);
 	JetTree->Branch("RecoJet_hasElectron", &RecoJet_hasElectron);
     JetTree->Branch("RecoJet_maxPtPart_pt", &RecoJet_maxPtPart_pt); 
+	// Reco Jet constituent branches
+	JetTree->Branch("RecoJet_constituent_pt", &RecoJet_constituent_pt);
+	JetTree->Branch("RecoJet_constituent_eta", &RecoJet_constituent_eta);
+	JetTree->Branch("RecoJet_constituent_phi", &RecoJet_constituent_phi);
+
 	// Gen Jet Branches
 	JetTree->Branch("GenJet_pt", &GenJet_pt);
 	JetTree->Branch("GenJet_eta", &GenJet_eta);
@@ -69,6 +82,11 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	JetTree->Branch("GenJet_hasElectron", &GenJet_hasElectron);
 	JetTree->Branch("GenJet_hasNeutral", &GenJet_hasNeutral);
     JetTree->Branch("GenJet_maxPtPart_pt", &GenJet_maxPtPart_pt); 
+	// Gen Jet constituent branches
+	JetTree->Branch("GenJet_constituent_pt", &GenJet_constituent_pt);
+	JetTree->Branch("GenJet_constituent_eta", &GenJet_constituent_eta);
+	JetTree->Branch("GenJet_constituent_phi", &GenJet_constituent_phi);
+
 	// --- END TTree setup ---
 	
 	// Loop over events	
@@ -84,6 +102,9 @@ void JetTrees(TString InputFileList, TString OutputFile){
 		RecoJet_M.clear();
 		RecoJet_hasElectron.clear();
 		RecoJet_maxPtPart_pt.clear();
+        RecoJet_constituent_pt.clear(); 
+        RecoJet_constituent_eta.clear();
+        RecoJet_constituent_phi.clear(); 
 		
 		GenJet_pt.clear();
 		GenJet_eta.clear();
@@ -93,6 +114,9 @@ void JetTrees(TString InputFileList, TString OutputFile){
 		GenJet_hasElectron.clear();
 		GenJet_hasNeutral.clear();
 		GenJet_maxPtPart_pt.clear();
+        GenJet_constituent_pt.clear(); 
+        GenJet_constituent_eta.clear();
+        GenJet_constituent_phi.clear(); 
 
 	    // Analyze Reconstructed Jets
 		for(unsigned int ijet = 0; ijet < JetRecoType->GetSize(); ijet++) {
@@ -104,16 +128,20 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			RecoJet_E.push_back(JetReco.E());
 			RecoJet_M.push_back((*JetRecoM)[ijet]);
 
+			std::vector<float> const_pt;
+			std::vector<float> const_eta;
+			std::vector<float> const_phi;
 			bool hasElectron = false; // Check if Jet Contains an Electron - Use Particle Matching to Find True PID
 			float maxPtReco = -1.0; // check max track pT in the constituents
 			for(unsigned int icjet = (*JetRecoCBegin)[ijet]; icjet < (*JetRecoCEnd)[ijet]; icjet++) {// Loop over jet constituents (particles within the jet)
 		   		int chargePartIndex = (*JetRecoCIdx)[icjet]; // ReconstructedChargedParticle Index for m'th Jet Component
 				// Calculate constituent pT
-				float px = (*TrkRecoPx)[chargePartIndex];
-				float py = (*TrkRecoPy)[chargePartIndex];
-				float pt = std::sqrt(px*px + py*py);
+				TVector3 TrkVec((*TrkRecoPx)[chargePartIndex], (*TrkRecoPy)[chargePartIndex], (*TrkRecoPz)[chargePartIndex]);
+				const_pt.push_back(TrkVec.Pt());
+                const_eta.push_back(TrkVec.Eta());
+                const_phi.push_back(TrkVec.Phi());
 				// Update Max Pt Particle
-				if (pt > maxPtReco) { maxPtReco = pt; }
+				if (TrkVec.Pt() > maxPtReco) { maxPtReco = TrkVec.Pt(); }
 				// Find electron in a jet
 			    int elecIndex = -1;
 			    float elecIndexWeight = -1.0;
@@ -130,7 +158,9 @@ void JetTrees(TString InputFileList, TString OutputFile){
 
 			RecoJet_hasElectron.push_back(hasElectron);
 			RecoJet_maxPtPart_pt.push_back(maxPtReco);
-    
+            RecoJet_constituent_pt.push_back(const_pt);
+            RecoJet_constituent_eta.push_back(const_eta);
+            RecoJet_constituent_phi.push_back(const_phi);   
 		}
 		
 		// Analyze Gen Jets
@@ -143,18 +173,22 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			GenJet_M.push_back((*JetGenM)[igjet]);
 			// -> Check for electrons
 			// Loop over jet constituents (particles within the jet)
+            std::vector<float> gconst_pt;
+            std::vector<float> gconst_eta;
+            std::vector<float> gconst_phi;
 			bool hasGenElectron = false; 
 			bool hasGenNeutral = false; 
 			float maxPtGen = -1.0;
 			for(unsigned int icgjet = (*JetGenCBegin)[igjet]; icgjet < (*JetGenCEnd)[igjet]; icgjet++) { 
 				int genPartIndex = (*JetGenCIdx)[icgjet];
 				// Calculate constituent pT
-				float px = (*TrkGenPx)[genPartIndex];
-				float py = (*TrkGenPy)[genPartIndex];
-				float pt = std::sqrt(px*px + py*py);
+				TVector3 gTrkVec((*TrkGenPx)[genPartIndex], (*TrkGenPy)[genPartIndex], (*TrkGenPz)[genPartIndex]);
+                gconst_pt.push_back(gTrkVec.Pt());
+                gconst_eta.push_back(gTrkVec.Eta());
+                gconst_phi.push_back(gTrkVec.Phi());
 				float charge = (*TrkGenCharge)[genPartIndex];
 				// Update Max Pt Particle
-				if (pt > maxPtGen) { maxPtGen = pt; }
+				if (gTrkVec.Pt() > maxPtGen) { maxPtGen = gTrkVec.Pt(); }
 				int gTrkPDG = (*TrkGenPDG)[genPartIndex];	    		
 			    if(gTrkPDG == 11) hasGenElectron = true;
 			    if(charge == 0)	hasGenNeutral = true;		
@@ -163,7 +197,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			GenJet_hasElectron.push_back(hasGenElectron);
 			GenJet_hasNeutral.push_back(hasGenNeutral);
 			GenJet_maxPtPart_pt.push_back(maxPtGen);			
-
+            GenJet_constituent_pt.push_back(gconst_pt);
+            GenJet_constituent_eta.push_back(gconst_eta);
+            GenJet_constituent_phi.push_back(gconst_phi);
+            
 		}
 
 		NEVENTS++;
