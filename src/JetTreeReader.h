@@ -19,6 +19,7 @@ std::unique_ptr<TTreeReaderArray<float>> TrkRecoPy;
 std::unique_ptr<TTreeReaderArray<float>> TrkRecoPz;
 std::unique_ptr<TTreeReaderArray<float>> TrkRecoM;
 std::unique_ptr<TTreeReaderArray<int>> TrkRecoPDG;
+std::unique_ptr<TTreeReaderArray<int>> TrkRecoNhits;
 
 // Reco to Gen track association
 std::unique_ptr<TTreeReaderArray<unsigned int>> TrkPartAssocRec;
@@ -89,7 +90,8 @@ void JetTreeReader(TChain* chain, std::unique_ptr<TTreeReader>& tree_reader) {
 	TrkPartAssocRec = std::make_unique<TTreeReaderArray<unsigned int>>(*tree_reader, "ReconstructedChargedParticleAssociations.recID"); // Reco <-> MCParticle
 	TrkPartAssocSim = std::make_unique<TTreeReaderArray<unsigned int>>(*tree_reader, "ReconstructedChargedParticleAssociations.simID");
 	TrkPartAssocWeight = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "ReconstructedChargedParticleAssociations.weight");
-
+	TrkRecoNhits = std::make_unique<TTreeReaderArray<unsigned int>>(*tree_reader, "CentralCKFTrajectories.nMeasurements");
+	
 	// Generated Jets
 	JetGenType = std::make_unique<TTreeReaderArray<int>>(*tree_reader, "GeneratedChargedJets.type");
     JetGenE = std::make_unique<TTreeReaderArray<float>>(*tree_reader, "GeneratedChargedJets.energy");

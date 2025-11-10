@@ -17,6 +17,8 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	std::vector<std::vector<float>> RecoJet_constituent_pt;
 	std::vector<std::vector<float>> RecoJet_constituent_eta;
 	std::vector<std::vector<float>> RecoJet_constituent_phi;
+	std::vector<std::vector<int>> RecoJet_constituent_nhit;
+
 	// Gen Jets (Variable-length vectors for multiple jets per event)
 	std::vector<float> GenJet_pt;
 	std::vector<float> GenJet_eta;
@@ -72,6 +74,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	JetTree->Branch("RecoJet_constituent_pt", &RecoJet_constituent_pt);
 	JetTree->Branch("RecoJet_constituent_eta", &RecoJet_constituent_eta);
 	JetTree->Branch("RecoJet_constituent_phi", &RecoJet_constituent_phi);
+	JetTree->Branch("RecoJet_constituent_phi", &RecoJet_constituent_nhits);
 
 	// Gen Jet Branches
 	JetTree->Branch("GenJet_pt", &GenJet_pt);
@@ -105,6 +108,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
         RecoJet_constituent_pt.clear(); 
         RecoJet_constituent_eta.clear();
         RecoJet_constituent_phi.clear(); 
+        RecoJet_constituent_nhits.clear();
 		
 		GenJet_pt.clear();
 		GenJet_eta.clear();
@@ -131,6 +135,8 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			std::vector<float> const_pt;
 			std::vector<float> const_eta;
 			std::vector<float> const_phi;
+			std::vector<int> const_nhits;
+
 			bool hasElectron = false; // Check if Jet Contains an Electron - Use Particle Matching to Find True PID
 			float maxPtReco = -1.0; // check max track pT in the constituents
 			for(unsigned int icjet = (*JetRecoCBegin)[ijet]; icjet < (*JetRecoCEnd)[ijet]; icjet++) {// Loop over jet constituents (particles within the jet)
@@ -140,6 +146,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 				const_pt.push_back(TrkVec.Pt());
                 const_eta.push_back(TrkVec.Eta());
                 const_phi.push_back(TrkVec.Phi());
+                const_nhits.push_back((*TrkRecoNhits)[chargePartIndex]);
 				// Update Max Pt Particle
 				if (TrkVec.Pt() > maxPtReco) { maxPtReco = TrkVec.Pt(); }
 				// Find electron in a jet
@@ -161,6 +168,13 @@ void JetTrees(TString InputFileList, TString OutputFile){
             RecoJet_constituent_pt.push_back(const_pt);
             RecoJet_constituent_eta.push_back(const_eta);
             RecoJet_constituent_phi.push_back(const_phi);   
+            RecoJet_constituent_nhits.push_back(const_nhits);   
+            
+            const_pt.clear();
+            const_eta.clear();
+            const_phi.clear();
+            const_nhits.clear();
+
 		}
 		
 		// Analyze Gen Jets
@@ -200,6 +214,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
             GenJet_constituent_pt.push_back(gconst_pt);
             GenJet_constituent_eta.push_back(gconst_eta);
             GenJet_constituent_phi.push_back(gconst_phi);
+            
+            gconst_pt.clear();
+            gconst_eta.clear();
+            gconst_phi.clear();            
             
 		}
 
