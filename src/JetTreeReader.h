@@ -19,7 +19,7 @@ std::unique_ptr<TTreeReaderArray<float>> TrkRecoPy;
 std::unique_ptr<TTreeReaderArray<float>> TrkRecoPz;
 std::unique_ptr<TTreeReaderArray<float>> TrkRecoM;
 std::unique_ptr<TTreeReaderArray<int>> TrkRecoPDG;
-std::unique_ptr<TTreeReaderArray<int>> TrkRecoNhits;
+std::unique_ptr<TTreeReaderArray<unsigned int>> TrkRecoNhits;
 
 // Reco to Gen track association
 std::unique_ptr<TTreeReaderArray<unsigned int>> TrkPartAssocRec;
