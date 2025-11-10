@@ -17,7 +17,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	std::vector<std::vector<float>> RecoJet_constituent_pt;
 	std::vector<std::vector<float>> RecoJet_constituent_eta;
 	std::vector<std::vector<float>> RecoJet_constituent_phi;
-	std::vector<std::vector<int>> RecoJet_constituent_nhit;
+	std::vector<std::vector<int>> RecoJet_constituent_nhits;
 
 	// Gen Jets (Variable-length vectors for multiple jets per event)
 	std::vector<float> GenJet_pt;
