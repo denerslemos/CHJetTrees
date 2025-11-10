@@ -136,6 +136,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			std::vector<float> const_eta;
 			std::vector<float> const_phi;
 			std::vector<int> const_nhits;
+            const_pt.clear();
+            const_eta.clear();
+            const_phi.clear();
+            const_nhits.clear();
 
 			bool hasElectron = false; // Check if Jet Contains an Electron - Use Particle Matching to Find True PID
 			float maxPtReco = -1.0; // check max track pT in the constituents
@@ -169,11 +173,6 @@ void JetTrees(TString InputFileList, TString OutputFile){
             RecoJet_constituent_eta.push_back(const_eta);
             RecoJet_constituent_phi.push_back(const_phi);   
             RecoJet_constituent_nhits.push_back(const_nhits);   
-            
-            const_pt.clear();
-            const_eta.clear();
-            const_phi.clear();
-            const_nhits.clear();
 
 		}
 		
@@ -190,6 +189,10 @@ void JetTrees(TString InputFileList, TString OutputFile){
             std::vector<float> gconst_pt;
             std::vector<float> gconst_eta;
             std::vector<float> gconst_phi;
+            gconst_pt.clear();
+            gconst_eta.clear();
+            gconst_phi.clear();   
+            
 			bool hasGenElectron = false; 
 			bool hasGenNeutral = false; 
 			float maxPtGen = -1.0;
@@ -213,11 +216,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 			GenJet_maxPtPart_pt.push_back(maxPtGen);			
             GenJet_constituent_pt.push_back(gconst_pt);
             GenJet_constituent_eta.push_back(gconst_eta);
-            GenJet_constituent_phi.push_back(gconst_phi);
-            
-            gconst_pt.clear();
-            gconst_eta.clear();
-            gconst_phi.clear();            
+            GenJet_constituent_phi.push_back(gconst_phi);         
             
 		}
 
