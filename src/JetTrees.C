@@ -59,7 +59,6 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	// Make Output
 	TFile *OutFile = TFile::Open(Form("%s",OutputFile.Data()),"RECREATE");	
 	TTree *JetTree = new TTree("JetTree", "JetTree");	
-	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); // To keep track of the event number	
 	// Event-level branches
 	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); 
 	// Reco Jet Branches
@@ -74,7 +73,7 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	JetTree->Branch("RecoJet_constituent_pt", &RecoJet_constituent_pt);
 	JetTree->Branch("RecoJet_constituent_eta", &RecoJet_constituent_eta);
 	JetTree->Branch("RecoJet_constituent_phi", &RecoJet_constituent_phi);
-	JetTree->Branch("RecoJet_constituent_phi", &RecoJet_constituent_nhits);
+	JetTree->Branch("RecoJet_constituent_nhits", &RecoJet_constituent_nhits);
 
 	// Gen Jet Branches
 	JetTree->Branch("GenJet_pt", &GenJet_pt);
