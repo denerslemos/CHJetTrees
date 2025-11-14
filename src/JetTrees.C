@@ -5,6 +5,8 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	typedef ROOT::Math::PxPyPzEVector LorentzVector;
 
 	int NEVENTS = 0;
+	int EVETMULTRECO = 0; 
+	int EVETMULTGEN = 0;
 	// Reco Jets (Variable-length vectors for multiple jets per event)
 	std::vector<float> RecoJet_pt;
 	std::vector<float> RecoJet_eta;
@@ -61,6 +63,8 @@ void JetTrees(TString InputFileList, TString OutputFile){
 	TTree *JetTree = new TTree("JetTree", "JetTree");	
 	// Event-level branches
 	JetTree->Branch("NEVENTS", &NEVENTS, "NEVENTS/I"); 
+	JetTree->Branch("EVETMULTRECO", &EVETMULTRECO, "EVETMULTRECO/I");
+	JetTree->Branch("EVETMULTGEN", &EVETMULTGEN, "EVETMULTGEN/I");
 	// Reco Jet Branches
 	JetTree->Branch("RecoJet_pt", &RecoJet_pt);
 	JetTree->Branch("RecoJet_eta", &RecoJet_eta);
@@ -120,6 +124,9 @@ void JetTrees(TString InputFileList, TString OutputFile){
         GenJet_constituent_pt.clear(); 
         GenJet_constituent_eta.clear();
         GenJet_constituent_phi.clear(); 
+
+		EVETMULTRECO = TrkRecoPx->GetSize();
+		EVETMULTGEN = TrkGenPx->GetSize();
 
 	    // Analyze Reconstructed Jets
 		for(unsigned int ijet = 0; ijet < JetRecoType->GetSize(); ijet++) {
